@@ -1,15 +1,10 @@
-import React from 'react';
+import React , { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { chooseList } from '../store/products.js';
 import {addToCart} from '../store/cart.js'
+// import * as actionsCart from '../store/cart.js'
+import * as actions from '../store/products';
 
-// import Card from '@material-ui/core/Card';
-// import CardActionArea from '@material-ui/core/CardActionArea';
-// import CardActions from '@material-ui/core/CardActions';
-// import CardContent from '@material-ui/core/CardContent';
-// import CardMedia from '@material-ui/core/CardMedia';
-// import Button from '@material-ui/core/Button';
-// import Typography from '@material-ui/core/Typography';
 import { Box, CardMedia, Container, Grid, Card, CardContent, CardActions, Button, Typography, CardActionArea } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -42,7 +37,6 @@ const useStyles = makeStyles((theme) => ({
         // flexWrap: 'wrap',
         justifyContent: 'center'
     },
-    
     grid1: {
         paddingTop: '34px',
         paddingBottom: '44px'
@@ -51,6 +45,9 @@ const useStyles = makeStyles((theme) => ({
 
 const Status = props => {
     console.log('props??????????.....', props);
+    useEffect(() => {
+        props.GET();
+    }, []);
 
     const classes = useStyles();
 
@@ -68,6 +65,7 @@ const Status = props => {
                         </Typography>
                     </Box>
                     {/* <h2>{props.list.results} List</h2> */}
+                   
                     {props.products.results.map((item, idx) => {
                         // return <li key={idx}>{item.name}<br />{item.price} <br /> {item.image} <br /></li>
                    
@@ -107,11 +105,19 @@ return (
 }
 
 
-const mapStateToProps = state => {
-    return state;
-};
+const mapStateToProps = state => ({
+    // return state;
+    products: state.products,
+    categories: state.categories,
+});
 
 
-const mapDespatchRoProps = { chooseList, addToCart};
+// const mapDespatchRoProps = { chooseList, addToCart};
+const mapDespatchToProps = (dispatch) => ({
+    
+    // addToCart: (product) => dispatch(actionsCart.addAction(product)),
+    // updateRemoteCart: (product) => dispatch(actionsCart.updateRemoteCart(product)),
+    GET: () => dispatch(actions.getRemoteData())
+});
 
-export default connect(mapStateToProps, mapDespatchRoProps)(Status)
+export default connect(mapStateToProps, mapDespatchToProps)(Status)

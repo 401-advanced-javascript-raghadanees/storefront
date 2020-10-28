@@ -1,10 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { addToCart } from '../store/cart.js'
 import { removeFromCart } from '../store/cart.js'
 
-
-import {  CardMedia, Container, Grid, Card, CardContent, CardActions, Button, Typography } from '@material-ui/core';
+import { Container, Grid, Card, CardContent, CardActions, Button, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 
