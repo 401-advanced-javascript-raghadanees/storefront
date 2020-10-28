@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { chooseList } from '../store/products.js';
+import {addToCart} from '../store/cart.js'
 
 // import Card from '@material-ui/core/Card';
 // import CardActionArea from '@material-ui/core/CardActionArea';
@@ -12,14 +13,6 @@ import { chooseList } from '../store/products.js';
 import { Box, CardMedia, Container, Grid, Card, CardContent, CardActions, Button, Typography, CardActionArea } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
-// const useStyles = makeStyles({
-//     root: {
-//       maxWidth: 345,
-//     },
-//     media: {
-//       height: 140,
-//     },
-//   });
 const useStyles = makeStyles((theme) => ({
     '@global': {
         ul: {
@@ -68,18 +61,18 @@ const Status = props => {
                 <ul>
                     <Box textAlign="center">
                         <Typography variant="h2" color="textPrimary">
-                            {props.categoruActivator.activeCategory.displayName}
+                            {props.categories.activeCategory.displayName}
                         </Typography>
                         <Typography variant="h6" color="textSecondary">
-                            {props.categoruActivator.activeCategory.desciption}
+                            {props.categories.activeCategory.desciption}
                         </Typography>
                     </Box>
                     {/* <h2>{props.list.results} List</h2> */}
-                    {props.list.results.map((item, idx) => {
+                    {props.products.results.map((item, idx) => {
                         // return <li key={idx}>{item.name}<br />{item.price} <br /> {item.image} <br /></li>
                    
 return (
-    <Container maxWidth="md" component="main">
+    <Container maxWidth="md" component="main" key={idx}>
                         <Grid className={classes.grid1} container  direction="raw" justify="center" alignItems="center">
                             <Grid className={classes.grid2} container item xs={12} sm={6} lg={4} >
 
@@ -98,11 +91,9 @@ return (
                                         </Typography>
                                     </CardContent>
                                     <CardActions>
-                                        <Button size="large" style={{ fontSize: '0.9rem' }} color="secondary">Add to my cart </Button>
+                                        <Button key={idx} size="large" style={{ fontSize: '0.9rem' }} color="secondary" onClick={() =>{props.addToCart(item)}}>Add to my cart </Button>
                                     </CardActions>
-
                                 </Card>
-
                             </Grid>
                         </Grid>
                     </Container>
@@ -111,7 +102,6 @@ return (
         </ul>
 
             </section>
-
         </>
     )
 }
@@ -122,6 +112,6 @@ const mapStateToProps = state => {
 };
 
 
-const mapDespatchRoProps = { chooseList };
+const mapDespatchRoProps = { chooseList, addToCart};
 
 export default connect(mapStateToProps, mapDespatchRoProps)(Status)

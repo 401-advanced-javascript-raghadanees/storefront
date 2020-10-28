@@ -3,9 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { select } from '../store/categories.js';
 import { chooseList } from '../store/products.js';
-
 import { Box, ButtonGroup, Button, CssBaseline } from '@material-ui/core';
-
 import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles((theme) => ({
@@ -62,8 +60,8 @@ const Status = props => {
 // 
 const mapStateToProps = state => {
     // console.log('props::>>',props);
-    return {activeCategory: state.categoruActivator}; // categoruActivator from reducer in store categories and imported into index in store to combineReducers 
-    // return {activeCategory: state.categoruActivator.categoruActivator};
+    return {activeCategory: state.categories}; // categories from reducer in store categories and imported into index in store to combineReducers 
+    // return {activeCategory: state.categories.categories};
 }
 
 const mapDispatchToProps = {select , chooseList}
