@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { addToCart } from '../store/cart.js'
 import { removeFromCart } from '../store/cart.js'
@@ -54,15 +54,17 @@ const useStyles = makeStyles((theme) => ({
 const Cart = props => {
 
     const classes = useStyles();
-    // console.log('Props ........ Cart ===>>', props);
+    console.log('Props ........ Cart ===>>', props);
 
     return (
         <>
-            {props.cart.cart.map((item,idx) => {
+            {props.cartContent.map((item,idx) => {
                 return (
                     <>
                         <Container key={idx} maxWidth="md" component="main">
-
+                        {/* <Typography variant="h5" color="textPrimary">
+                        Cart: ({props.length}) */}
+                        {/* </Typography> */}
                             <Grid className={classes.jss7} container spacing={0} direction="row" justify="center" alignItems="center">
                                 <Grid className={classes.jss8} container item xs={6} sm={6} lg={6} >
                                     <Card key={idx} className={classes.card}>
@@ -96,9 +98,10 @@ const Cart = props => {
 
 
 
-const mapStateToProps = state => {
-    return state;
-}
+const mapStateToProps = state => ({
+    length: state.cart.cartContent.length,
+  cartContent: state.cart.cartContent,
+})
 
 const mapDispatchToProps = { addToCart, removeFromCart }
 

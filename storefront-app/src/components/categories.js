@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
-
 import { connect } from 'react-redux';
-import { select } from '../store/categories.js';
-// import { chooseList } from '../store/products.js';
-import * as actions from '../store/categories';
+import { select, getCategoriesData } from '../store/categories.js';
+import { chooseList } from '../store/products.js';
+// import * as actions from '../store/categories';
 import { Box, ButtonGroup, Button, CssBaseline } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles'
 
@@ -24,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         flexDirection: 'raw',
         alignItems: 'center',
-        marginLeft: '35%',
+        marginLeft: '38%',
         '& > *': {
           margin: theme.spacing(1),
         },
@@ -32,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 const Status = props => {
     useEffect(() => {
-        props.GETCATEG();
+        props.getCategoriesData();
     }, []);
 
     const classes = useStyles();
@@ -65,12 +64,14 @@ const mapStateToProps = state => {
     return {activeCategory: state.categories}; // categories from reducer in store categories and imported into index in store to combineReducers 
     // return {activeCategory: state.categories.categories};
 }
-
-// const mapDispatchToProps = {select , chooseList}
-const mapDispatchToProps = (dispatch) => ({
-    select:  (name) => dispatch(actions.select(name)),
-    GETCATEG: () => dispatch(actions.getRemoteData())
-})
+// const mapStateToProps = state =>({
+//     activeCategory: state.categories
+// })
+const mapDispatchToProps = {select , chooseList, getCategoriesData}
+// const mapDispatchToProps = (dispatch) => ({
+//     select:  (name) => dispatch(actions.select(name)),
+//     getCategoriesData: () => dispatch(actions.getCategoriesData())
+// })
 
 export default connect(mapStateToProps , mapDispatchToProps)(Status)
 

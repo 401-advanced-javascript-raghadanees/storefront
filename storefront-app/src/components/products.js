@@ -1,11 +1,10 @@
 import React , { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { chooseList } from '../store/products.js';
+import { getProductData } from '../store/products.js';
 import {addToCart} from '../store/cart.js'
-// import * as actionsCart from '../store/cart.js'
-import * as actions from '../store/products';
 
-import { Box, CardMedia, Container, Grid, Card, CardContent, CardActions, Button, Typography, CardActionArea } from '@material-ui/core';
+
+import { Box, CardMedia, Container, Grid, Card, CardContent, CardActions, Button, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
@@ -46,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
 const Status = props => {
     console.log('props??????????.....', props);
     useEffect(() => {
-        props.GET();
+        props.getProductData();
     }, []);
 
     const classes = useStyles();
@@ -79,6 +78,7 @@ return (
                                     className={classes.media}
                                     image={item.image}
                                     title={item.name}
+                                    description={item.description}
                                     />
                                     <CardContent>
                                         <Typography variant="h5" color="textPrimary">
@@ -109,15 +109,16 @@ const mapStateToProps = state => ({
     // return state;
     products: state.products,
     categories: state.categories,
+    cartContent: state.cart.cartContent,
 });
 
 
-// const mapDespatchRoProps = { chooseList, addToCart};
-const mapDespatchToProps = (dispatch) => ({
+const mapDispatchToProps  = { getProductData, addToCart};
+// const mapDispatchToProps  = (dispatch) => ({
     
-    // addToCart: (product) => dispatch(actionsCart.addAction(product)),
-    // updateRemoteCart: (product) => dispatch(actionsCart.updateRemoteCart(product)),
-    GET: () => dispatch(actions.getRemoteData())
-});
+//     // addToCart: (product) => dispatch(actionsCart.addAction(product)),
+//     // updateRemoteCart: (product) => dispatch(actionsCart.updateRemoteCart(product)),
+//     GET: () => dispatch(actions.getProductData())
+// });
 
-export default connect(mapStateToProps, mapDespatchToProps)(Status)
+export default connect(mapStateToProps, mapDispatchToProps )(Status);

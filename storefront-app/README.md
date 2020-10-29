@@ -5,12 +5,16 @@ This application was build with react.js
 
 ## Installation
 - open your terminal
-
 - Clone the repo
+- npm i
+- To start the application type in the terminal : npm start
 
-### UML
+### UML redux
 ![UML](/uml/store1uml.jpg)
 
-### UML
+### UML combineReducer
 ![UML](/uml/store2uml.jpg)
+
+### UML thunk
+![UML](/uml/thunk-uml.jpg)
 

@@ -1,51 +1,58 @@
+// import superagent from 'superagent';
 
 let initialState = {
-    cart: [],
-    count: 0
+    cartContent: [],
+    // count: 0
 }
+
 ///reducer
 export default (state = initialState, action) => {
     let { type, payload } = action;
-    let count = state.count;
-    let cart = state.cart;
 
     switch (type) {
-        case 'cart':
-            let length = state.cart.length;
-            payload = { ...payload, id: length + 1 } 
+        // case 'GET-CART':
 
-            count = state.count + 1;
-            return { cart: [...state.cart, payload], count }
+        //     console.log('payloaaaad--GET', payload)
 
-        case 'removeFromCart':
+        //     return { ...state.cartContent }
 
-            cart = cart.filter(item => {
-                if (item.id !== payload.id) {
-                    return item;
-                }
-            });
+        case 'ADD-CART':
 
-            count = state.count - 1;
-            return {  cart, count };
+           let updated = state.cartContent.push(payload);
+            return { ...state, updated };
+
+        case 'REMOVE-CART':
+            state.cartContent.splice(state.cartContent.indexOf(payload), 1);
+            // state.cartContent.splice(payload, 1);
+            return { ...state };
 
         default:
             return state;
     }
-
 }
 
 
-export const addToCart = (add) => {
+
+
+
+
+
+// export const getCart = (items) => {
+//     return {
+//         type: 'GET-CART',
+//         payload: items
+//     }
+// }
+export const addToCart = (item) => {
     return {
-        type: 'cart',
-        payload: add
+        type: 'ADD-CART',
+        payload: item
     }
 }
 
-
-export const removeFromCart = (remove) => {
+export const removeFromCart = (item) => {
     return {
-        type: 'removeFromCart',
-        payload: remove
+        type: 'REMOVE-CART',
+        payload: item
     }
 }
