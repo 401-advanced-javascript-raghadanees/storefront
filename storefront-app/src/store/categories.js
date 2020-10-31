@@ -1,27 +1,26 @@
 import superagent from 'superagent' ;
 
 let initialState = {
-    categories: [],
+    results: [],
     activeCategory: 'Electronics',
 };
 
 // reducer
+// eslint-disable-next-line
 export default (state = initialState, action) => {
     // update the state based on an action
     // select
     let { type, payload } = action;
 console.log('payload---------',payload);
-    switch (type) {
-        case 'GET-CATEG':
-            return { ...state, categories: payload };
 
+    switch (type) {
+        case 'GET-CATEGORIES':
+            // return { ...state, categories: payload };
+            return payload;
         case 'SELECT':
-            // let activeCategory = payload;
-            //  state.activeCategory = payload;
-            // return {...state };
-            // console.log('activeCategory,,,,,,',activeCategory);
-            // return the updated state.
-            return { ...state, activeCategory: payload };
+           
+            state.activeCategory = payload;
+            return {...state };
             
         default : return state;
     }
@@ -35,22 +34,26 @@ export const select = (name) => {
     }
 }
 
-let api = 'https://as-app-server.herokuapp.com/api/v1/categories'
+
+// let api = 'https://as-app-server.herokuapp.com/api/v1/categories'
 // action creator is a function that returns an object ====>>> in normal cases
 // return a function from my action creator
 export const getCategoriesData = () => (dispatch) => {
+    var api = 'https://todos-api1.herokuapp.com/api/v1/categories';
     // return a fucntion that will call superagent API
     return superagent.get(api).then(data=> {
         // call my action after getting the API response.
-        dispatch(getAction(data.body.results));
+        // dispatch(getAction(data.body.results));
+        dispatch(getAction(data.body));
+
     });
 }
 
 // action creator function 
 const getAction = payload => {
-    console.log('payloaaaaaaddddd-GET-CATEG',payload)
+    console.log('payloaaaaaaddddd-GET-CATEGORIES',payload)
     return {
-        type: 'GET-CATEG',
+        type: 'GET-CATEGORIES',
         payload: payload
     }
 }

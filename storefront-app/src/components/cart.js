@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { addToCart } from '../store/cart.js'
-import { removeFromCart } from '../store/cart.js'
+
+import * as actions from '../store/cart';
+import * as actionsProduct from '../store/products';
 
 import { Container, Grid, Card, CardContent, CardActions, Button, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -30,11 +31,11 @@ const useStyles = makeStyles((theme) => ({
     },
     media: {
         height: 0,
-        paddingTop: '56.25%', // 16:9
+        paddingTop: '56.25%', 
         borderTopLeftRadius: '5px',
         borderTopRightRadius: '5px'
     },
-    jss8: {
+    grid2: {
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
@@ -43,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
     jss5: {
         padding: '64px 0px 48px'
     },
-    jss7: {
+    grid1: {
         paddingTop: '24px',
         paddingBottom: '24px'
     }
@@ -53,20 +54,24 @@ const useStyles = makeStyles((theme) => ({
 
 const Cart = props => {
 
+    useEffect(() => { props.getCartAPI(); }, []);
+
     const classes = useStyles();
     console.log('Props ........ Cart ===>>', props);
 
+    const deletefromCart = (idx, element) => {
+        props.removeFromCart(idx);
+        props.increaseInStock(element);
+    }
     return (
         <>
-            {props.cartContent.map((item,idx) => {
+            {props.cartData.cartItem.map((item,idx) => {
                 return (
                     <>
                         <Container key={idx} maxWidth="md" component="main">
-                        {/* <Typography variant="h5" color="textPrimary">
-                        Cart: ({props.length}) */}
-                        {/* </Typography> */}
-                            <Grid className={classes.jss7} container spacing={0} direction="row" justify="center" alignItems="center">
-                                <Grid className={classes.jss8} container item xs={6} sm={6} lg={6} >
+                
+                            <Grid className={classes.grid1} container spacing={0} direction="row" justify="center" alignItems="center">
+                                <Grid className={classes.grid2} container item xs={6} sm={6} lg={6} >
                                     <Card key={idx} className={classes.card}>
                                         <CardContent >
                                             <Typography variant="h5" color="textPrimary">
@@ -79,7 +84,7 @@ const Cart = props => {
                                         </Typography>
                                         </CardContent>
                                         <CardActions>
-                                            <Button key={idx}  style={{ fontSize: '0.9rem' }} color="secondary" onClick={() => { props.removeFromCart(item) }} >Remove</Button>
+                                            <Button key={idx}  style={{ fontSize: '0.9rem' }} color="secondary" onClick={() => deletefromCart(idx, item)} >Remove</Button>
                                         </CardActions>
                                     </Card>
                                 </Grid>
@@ -98,11 +103,17 @@ const Cart = props => {
 
 
 
-const mapStateToProps = state => ({
-    length: state.cart.cartContent.length,
-  cartContent: state.cart.cartContent,
-})
 
-const mapDispatchToProps = { addToCart, removeFromCart }
+const mapStateToProps = state => ({
+    // length: state.cartItem.length,
+  cartData: state.cartData,
+})
+// const mapDispatchToProps = { addToCart, removeFromCart }
+
+const mapDispatchToProps = (dispatch, getState) => ({
+    getCartAPI: () => dispatch(actions.getCartAPI()),
+    removeFromCart: (productIdx) => dispatch(actions.removeFromCart(productIdx)),
+    increaseInStock: (product) => dispatch(actionsProduct.increaseInStock(product)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Cart)

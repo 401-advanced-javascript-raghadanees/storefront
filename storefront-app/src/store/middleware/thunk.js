@@ -2,6 +2,7 @@
 // and no need to add this manually created middleware
 
 // we can either use this small manul version or install redux-thunk
+// eslint-disable-next-line
 export default store => next => action => {
     console.log("action >>> ",action)
     typeof action == 'function' 

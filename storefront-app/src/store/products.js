@@ -1,47 +1,55 @@
 
 import superagent from 'superagent';
-// {
-//     "_id": "5f985ae8b473c50024f77ea7",
-//     "name": "Apple AirPods ",
-//     "category": "Electronics",
-//     "description": "Apple AirPods with Charging Case (Wired)",
-//     "price": 154.92,
-//     "inStock": 14,
-//     "__v": 0
-//     }
+
 // https://as-app-server.herokuapp.com/api/v1/products
 
 let initialState ={
     products: [],
     results: [],
 }
-
+// eslint-disable-next-line
 export default (state = initialState, action) => {
     let { type, payload } = action;
 
     switch (type) {
         case 'GET-PROD':
-            // return payload;
-            return {...state, products: payload};
+            return payload;
+            // return {...state, products: payload};
 
-        case 'CHOOSE':
-            // let products = state.products;
-            let results = state.products.results.filter((item)=> {
-                console.log('payload products <=======>', payload);
-                return item.category === payload.name;
+        // case 'CHOOSE':
+        //     // let products = state.products;
+        //     let results = state.products.results.filter((item)=> {
+        //         console.log('payload products <=======>', payload);
+        //         return item.category === payload.name;
+        //     });
+        //     console.log('results >>',results);
+        //     // return { results, products };
+        //     return {...state, results};
+
+        case 'DEC-Stock':
+            state.results.forEach((item) => {
+                if (item.name === payload.name) item.inStock--;
             });
-            console.log('results >>',results);
-            // return { results, products };
-            return {...state, results};
+            return { ...state };
+
+        case 'INC-Stock':
+            state.results.forEach((item) => {
+                if (item.name === payload.name) item.inStock++;
+            });
+            return { ...state };
+
         default:
             return state;
     }
 }
 
-let api = 'https://as-app-server.herokuapp.com/api/v1/products'
+
+// let api = 'https://as-app-server.herokuapp.com/api/v1/products'
+
 // action creator is a function that returns an object ====>>> in normal cases
 // return a function from my action creator
 export const getProductData = () => (dispatch) => {
+    var api = 'https://todos-api1.herokuapp.com/api/v1/products'
     // return a fucntion that will call superagent API
     return superagent.get(api).then(data=> {
         // call my action after getting the API response.
@@ -57,13 +65,27 @@ const getAction = payload => {
     }
 }
 
-// action 
-export const chooseList = (clicked) => {
+export const decreaseInStock = (name) => {
     return {
-        type: 'CHOOSE',
-        payload: clicked
+        type: 'DEC-Stock',
+        payload: name
     }
 }
+
+export const increaseInStock = (name) => {
+    return {
+        type: 'INC-Stock',
+        payload: name
+    }
+}
+
+//// action 
+// export const chooseList = (clicked) => {
+//     return {
+//         type: 'CHOOSE',
+//         payload: clicked
+//     }
+// }
 
 // let initialState = {
 //     products: [
