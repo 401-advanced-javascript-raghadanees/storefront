@@ -1,16 +1,10 @@
-import React from 'react';
+import React , { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { chooseList } from '../store/products.js';
-import {addToCart} from '../store/cart.js'
+import * as actionsCart from '../store/cart.js'
+import * as actions from '../store/products';
 
-// import Card from '@material-ui/core/Card';
-// import CardActionArea from '@material-ui/core/CardActionArea';
-// import CardActions from '@material-ui/core/CardActions';
-// import CardContent from '@material-ui/core/CardContent';
-// import CardMedia from '@material-ui/core/CardMedia';
-// import Button from '@material-ui/core/Button';
-// import Typography from '@material-ui/core/Typography';
-import { Box, CardMedia, Container, Grid, Card, CardContent, CardActions, Button, Typography, CardActionArea } from '@material-ui/core';
+
+import { Box, CardMedia, Container, Grid, Card, CardContent, CardActions, Button, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
@@ -42,7 +36,6 @@ const useStyles = makeStyles((theme) => ({
         // flexWrap: 'wrap',
         justifyContent: 'center'
     },
-    
     grid1: {
         paddingTop: '34px',
         paddingBottom: '44px'
@@ -51,8 +44,16 @@ const useStyles = makeStyles((theme) => ({
 
 const Status = props => {
     console.log('props??????????.....', props);
+    // eslint-disable-next-line
+    useEffect(() => {  props.getProduct(); }, []);
 
     const classes = useStyles();
+
+    const updateFunctions = item => {
+        props.addToCart(item) 
+        props.decreaseInStock(item)
+        // props.updateRemoteCart(props.cartData.cartItem)
+      }
 
     return (
 
@@ -61,43 +62,46 @@ const Status = props => {
                 <ul>
                     <Box textAlign="center">
                         <Typography variant="h2" color="textPrimary">
-                            {props.categories.activeCategory.displayName}
+                            {props.categoryData.activeCategory}
                         </Typography>
-                        <Typography variant="h6" color="textSecondary">
-                            {props.categories.activeCategory.desciption}
-                        </Typography>
+                       
                     </Box>
-                    {/* <h2>{props.list.results} List</h2> */}
-                    {props.products.results.map((item, idx) => {
-                        // return <li key={idx}>{item.name}<br />{item.price} <br /> {item.image} <br /></li>
+                   
+                    {props.productData.results.map((item, idx) => {
+                        if (item.category === props.categoryData.activeCategory) {   
                    
 return (
     <Container maxWidth="md" component="main" key={idx}>
                         <Grid className={classes.grid1} container  direction="raw" justify="center" alignItems="center">
                             <Grid className={classes.grid2} container item xs={12} sm={6} lg={4} >
 
-                                <Card key={item.name} className={classes.card}>
+                                <Card key={idx} className={classes.card}>
                                     <CardMedia
                                     className={classes.media}
-                                    image={item.image}
+                                    image={item.img}
                                     title={item.name}
+                                    description={item.description}
                                     />
                                     <CardContent>
                                         <Typography variant="h5" color="textPrimary">
                                             {item.name}
                                         </Typography>
                                         <Typography variant="p" color="textSecondary">
-                                            {item.price}
+                                            price : {item.price}$
+                                            <br/>
+                                            inStock :  {item.inStock}
                                         </Typography>
                                     </CardContent>
                                     <CardActions>
-                                        <Button key={idx} size="large" style={{ fontSize: '0.9rem' }} color="secondary" onClick={() =>{props.addToCart(item)}}>Add to my cart </Button>
+                                        <Button key={idx} size="large" style={{ fontSize: '0.9rem' }} color="secondary" onClick={() =>{item.inStock > 0 ? updateFunctions(item): <br/> } 
+                                        }>Add to my cart </Button>
                                     </CardActions>
                                 </Card>
                             </Grid>
                         </Grid>
                     </Container>
 )
+ }
 })}
         </ul>
 
@@ -107,11 +111,20 @@ return (
 }
 
 
-const mapStateToProps = state => {
-    return state;
-};
+const mapStateToProps = state => ({
+    // return state;
+    productData: state.productData,
+    categoryData: state.categoryData,
+    cart: state.cart,
+});
 
 
-const mapDespatchRoProps = { chooseList, addToCart};
+// const mapDispatchToProps  = { getProductData, addToCart};
+const mapDispatchToProps  = (dispatch) => ({
+    decreaseInStock: (product) => dispatch(actions.decreaseInStock(product)),
+    addToCart: (product) => dispatch(actionsCart.addToCart(product)),
+    updateRemoteCart: (product) => dispatch(actionsCart.updateRemoteCart(product)),
+    getProduct: () => dispatch(actions.getProductData())
+});
 
-export default connect(mapStateToProps, mapDespatchRoProps)(Status)
+export default connect(mapStateToProps, mapDispatchToProps )(Status);

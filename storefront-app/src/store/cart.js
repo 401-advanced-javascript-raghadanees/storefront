@@ -1,50 +1,83 @@
+import superagent from 'superagent';
+
 let initialState = {
-    cart: [],
-    count: 0
+    cartItem: [],
+    // count: 0
 }
+
 ///reducer
+// eslint-disable-next-line
 export default (state = initialState, action) => {
     let { type, payload } = action;
-    let count = state.count;
-    let cart = state.cart;
 
     switch (type) {
-        case 'cart':
-            let length = state.cart.length;
-            payload = { ...payload, id: length + 1 } 
+        case 'GET-CART':
 
-            count = state.count + 1;
-            return { cart: [...state.cart, payload], count }
-
-        case 'removeFromCart':
-
-            cart = cart.filter(item => {
-                if (item.id !== payload.id) {
-                    return item;
+            console.log('payloaaaad--GET cart', payload)
+            payload.results.forEach(element => {
+                console.log('element >',element);
+                if(state.cartItem.length < 3){
+                state.cartItem.push(element)
                 }
-            });
+              });
+            // return { ...state.cartItem }
+            return { ...state}
 
-            count = state.count - 1;
-            return {  cart, count };
+        case 'ADD-CART':
+
+         state.cartItem.push(payload);
+            return { ...state };
+
+        case 'REMOVE-CART':
+            // state.cartItem.splice(state.cartItem.indexOf(payload), 1);
+            state.cartItem.splice(payload, 1);
+            return { ...state };
 
         default:
             return state;
     }
-
 }
 
 
-export const addToCart = (add) => {
+
+let api = 'https://todos-api1.herokuapp.com/api/v1/carts';
+
+export const getCartAPI = () => dispatch => {
+  return superagent.get(api)
+    .then(data => {
+      dispatch(getCart(data.body))
+    });
+}
+
+export const createCart = (cartData) => dispatch => {
+  console.log('cartData ===>',cartData);
+  return superagent.post(api).send(cartData).then()
+}
+
+
+export const updateRemoteCart = (cartData) => async dispatch => {
+  console.log('cartData,,,,,,,', cartData);
+  await superagent.put(`${api}/${cartData[0]._id}`).send(cartData);
+}
+
+
+
+export const getCart = (items) => {
     return {
-        type: 'cart',
-        payload: add
+        type: 'GET-CART',
+        payload: items
+    }
+}
+export const addToCart = (AddedItem) => {
+    return {
+        type: 'ADD-CART',
+        payload: AddedItem
     }
 }
 
-
-export const removeFromCart = (remove) => {
+export const removeFromCart = (removedItem) => {
     return {
-        type: 'removeFromCart',
-        payload: remove
+        type: 'REMOVE-CART',
+        payload: removedItem
     }
 }
